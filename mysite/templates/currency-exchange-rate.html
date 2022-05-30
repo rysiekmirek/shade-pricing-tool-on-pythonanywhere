@@ -1,0 +1,80 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+  <div class="bg-dark text-secondary px-4 py-5 text-center">
+
+    <h1 class="display-5 fw-bold text-white background-color:gray">Currency exchange calculator</h1><br>
+    <div class="col-lg-6 mx-auto">
+            <hr style="height:2px;border-width:0;color:gray;background-color:gray">
+
+    <p class="lead mb-4">
+
+    <form action="" method="post" >
+      {% csrf_token %}
+    <div class="container">
+
+    <div class="row">
+
+    <div class="col">
+    <div class="form-floating">
+    <select class="form-select" id="fcurrency" name="fcurrency">
+    <option value="CHF">CHF</option>
+    <option value="EUR">EUR</option>
+    <option value="USD">USD</option>
+    <option value="GBP">GBP</option>
+    </select>
+    <label for="floatingSelect">Currency</label>
+    </div>
+    </div>
+
+    <div class="col">
+    <div class="form-floating">
+    <select class="form-select" id="fratetype" name="fratetype">
+    <option value="ask">Ask</option>
+    <option value="mid">Average</option>
+    <option value="bid">Bid</option>
+    </select>
+    <label for="floatingSelect">Rate Type</label>
+    </div>
+    </div>
+
+    <div class="col">
+    <div class="form-floating">
+      <input class="form-control" type="text" id="famount" name="famount" required>
+    <label for="floatingSelect">Amount</label>
+    </div>
+    </div>
+
+  </div>
+
+  <div class="row">
+      <div class="col">
+          <br>
+      <input type="date" id="fdate" name="fdate" required>
+    </div>
+    </div>
+
+     <div class="row">
+          <div class="col">
+              <br>
+  <button type="submit" class="btn btn-primary btn-lg px-1 gap-1" >Get value in PLN</button>
+      </div>
+    </div>
+
+         <div class="row">
+          <div class="col">
+              <br>
+           <h4> {{ currency_result_text }} </h4>
+      </div>
+    </div>
+      </form>
+    </p>
+
+
+    </div>
+    </div>
+    </div>
+
+
+{% endblock %}

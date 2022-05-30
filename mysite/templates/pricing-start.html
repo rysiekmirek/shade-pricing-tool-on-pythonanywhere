@@ -1,0 +1,29 @@
+{% extends 'pricing-base.html' %}
+
+{% block content %}
+
+
+<br><br>
+
+    <h1 class="display-5 fw-bold">Kalkulator wyceny rolet</h1>
+    <div class="col-lg-4 mx-auto">
+
+      <p class="lead mb-4"> Podaj nazwę projektu </p
+
+    <p class="lead mb-4">
+    <form action="" method="POST">
+      {% csrf_token %}
+
+    <div class="form-floating">
+    <input class="form-control" type="text" id="f_pricing_name" name="f_pricing_name" required>
+    <label for="f_pricing_name">Nazwa Projektu</label>
+    </div>
+    <br>
+    <button type="submit" class="btn btn-secondary btn-lg btn-block btn-sm"> Rozpocznij </button>
+
+    </form>
+    </p>
+
+  </div>
+
+{% endblock %}

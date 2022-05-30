@@ -1,0 +1,61 @@
+{% extends 'pricing-base.html' %}
+
+{% block content %}
+
+<br><br>
+
+
+    <h1 class="display-5 fw-bold">Historia wycen</h1>
+    <div class="col-lg-10 mx-auto">
+
+    <div class="col-lg-6 mx-auto">
+    <p class="lead">
+    <form action="{% url 'pricing-history' %}" method="GET">
+
+    <h4>Szukaj</h4>
+    <input class="form-control" type="text" id="search_query" name="search_query" value="{{search_query}}">
+    <br>
+
+    <button type="submit" class="btn btn-secondary btn-lg btn-block btn-sm" > Szukaj </button>
+
+    </form>
+    </p>
+    </div>
+<!--
+    <div class="float-end">
+    <form action="" method="POST">
+      {% csrf_token %}
+    {% if toggle == "my"%}
+    <button type="submit" name="ftoggle" value="my"> Pokaż tylko moje wyceny </button>
+    {% else %}
+    <button type="submit" name="ftoggle" value="all"> Pokaż wszystkie wyceny </button>
+    {%endif%}
+    </form>
+    </div>
+-->
+    <table class="table table-hover">
+        <tr>
+        <th>Nazwa wyceny</th>
+        <th>Autor</th>
+        <th>Data utworzenia</th>
+        <th></th>
+        <th></th>
+        </tr>
+    {%for pricing in pricings_list %}
+
+        <tr>
+            <td>{{pricing.name}}</td>
+            <td>{{pricing.username}}</td>
+            <td>{{pricing.created}}</td>
+            <td><a href="/pricing/{{pricing.id}}">Edytuj</a></td>
+            <td><a href="/pricing-history/delete/{{pricing.id}}">Usuń</a></td>
+
+        </tr>
+    {% endfor %}
+    <hr>
+    </table>
+    </div>
+  </div>
+
+
+{% endblock %}

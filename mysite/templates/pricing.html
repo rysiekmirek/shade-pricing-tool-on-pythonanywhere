@@ -1,0 +1,178 @@
+{% extends 'pricing-base.html' %}
+
+{% block content %}
+
+<br><br>
+
+    <h1 class="display-5 fw-bold">Kalkulator wyceny rolet</h1>
+      <p class="lead mb-4">Wybierz typ osłony, podaj kolor, szerokość oraz wysokość i stwórz zestawienie  </p
+
+
+{% if messages %}
+    {% for message in messages %}
+    <p> <p style="color:red;"> {{ message }} </p></p>
+    {% endfor %}
+{% endif %}
+
+    <p class="lead">
+    <form action="" method="POST">
+      {% csrf_token %}
+
+    <div class="container-md">
+
+
+    <div class="row">
+
+    <div class="col-md">
+    <div class="form-floating">
+    <select onchange="this.options[this.selectedIndex].value && (window.location = this.options[this.selectedIndex].value);" class="form-select" id="f_shade" name="f_shade" required >
+    <option disabled selected value >Wybierz...</option>
+    {%for shade_type in shade_types %}
+    {% if shade_type == selected_shade_type %}
+    <option value="{{selected_shade_type}}" selected value>{{selected_shade_type}}</option>
+    {%else%}
+    <option value="/pricing/{{pricing_name_id}}/{{shade_type}}">{{shade_type}}</option>
+    {%endif%}
+    {%endfor%}
+
+    </select>
+    <label for="f_shade">Typ Osłony</label>
+    </div>
+    </div>
+
+
+    <div class="col-md">
+    <div class="form-floating">
+    <select class="form-select" id="f_color" name="f_color" required>
+    <option disabled selected value> Wybierz kolor </option>
+    {%for color in colors%}
+    <option value="{{color}}">{{color}}</option>
+    {%endfor%}
+    </select>
+    <label for="f_color">Kolor</label>
+    </div>
+    </div>
+
+    <div class="col-md">
+    <div class="form-floating">
+    <input class="form-control" type="number" min={{min_width}} max={{max_width}} id="f_width" name="f_width" step="0.1" required>
+    <label for="f_width">Szerokość (cm)</label>
+    </div>
+    </div>
+
+
+    <div class="col-md">
+    <div class="form-floating">
+    {% if selected_shade_type == 'Grupa_E_Wolnowiszące' %}
+
+    <select class="form-select" id="f_height" name="f_height" required>
+        <option disabled selected value >Wybierz kategorię</option>
+        <option value="1">1</option>
+        <option value="2">2</option>
+        <option value="3">3</option>
+        <option value="4">4</option>
+        <option value="5">5</option>
+        <option value="6">6</option>
+    </select>
+    <label for="f_height">Kategoria cenowa</label>
+    {%else%}
+    <input class="form-control" type="number" min={{min_height}} max={{max_height}} id="f_height" name="f_height" step="0.1" required>
+    <label for="f_height">Wysokość (cm)</label>
+    {%endif%}
+    </div>
+    <br>
+    </div>
+
+    <div class="col-md">
+    <div class="form-floating">
+    <input class="form-control" type="text" id="f_window_name" name="f_window_name">
+    <label for="f_window_name">Nazwa okna</label>
+    </div>
+    </div>
+
+    </div>
+
+    <button type="submit" class="btn btn-secondary btn-lg btn-block btn-sm" >Dodaj do zestawienia</button>
+    </form>
+    </p>
+
+    <div class="table-responsive">
+    <table class="table table-striped table-sm caption-top">
+        <caption>
+
+            <div class="container">
+            <div class="row">
+            <div class="col"> Nazwa wyceny:<b> {{pricing_name}} </b> </div>
+            <div class="col text-center" > Autor wyceny: <b> {{pricing_username}} </b> </div>
+            <div class="col text-end"> <form> <button formaction="/pricing/generate-pdf/{{pricing_name_id}}/" class="btn btn-secondary btn-lg btn-block btn-sm btn-warning" > Eksportuj do PDF </button> </form> </div>
+            </div>
+            </div>
+
+        </caption>
+        <tr>
+        <th>Nazwa Okna</th>
+        <th>Typ osłony</th>
+        <th>Kolor</th>
+        <th>Szerokość (cm)</th>
+        <th>Wysokość (cm) / <br> Kategoria cenowa</th>
+        <th>Cena (PLN)</th>
+        <th>Cena po korekcie (PLN)</th>
+        <th></th>
+        <th></th>
+        </tr>
+
+    {%for pricing in pricings_list %}
+        <tr>
+            <td>{{pricing.windowName}}</td>
+            <td>{{pricing.shadeType}}</td>
+            <td>{{pricing.shadeColor}}</td>
+            <td>{{pricing.shadeWidth}}</td>
+            <td>{{pricing.shadeHeight}}</td>
+            <td>{{pricing.shadePrice}}</td>
+            <td>{{pricing.shadePriceAdjusted}}</td>
+            <td><a href="/pricing/duplicate/{{pricing.pricingName_id}}/{{pricing.id}}">Duplikuj</a></td>
+            <td><a href="/pricing/delete/{{pricing.pricingName_id}}/{{pricing.id}}">Usuń</a></td>
+        </tr>
+    {% endfor %}
+    <hr>
+        <tr><td></td><td></td><td></td><td></td><td></td><td><b>{{sum_of_prices}}</b></td><td><b>{{sum_of_prices_adjusted}} ({{pricing_adjustment}} %)</b></td><td></td></tr>
+    </table>
+
+    <hr>
+
+    <div class="container-md">
+    <div class="row">
+
+    <div class="col-lg-4 mx-auto">
+    <form action="" method="POST">
+      {% csrf_token %}
+    <label for="f_adjustment"> Korekta wyceny [%] </label><br>
+    <div class="input-group">
+    <input class="form-control d-inline" type="number" id="f_adjustment" name="f_adjustment" min=1 step=1 value="{{pricing_adjustment}}">
+    <button type="submit" class="d-inline btn btn-secondary btn-lg btn-block btn-sm" > Koryguj </button>
+    </div>
+    </form>
+    </div>
+
+    <div class="col-lg-8 mx-auto">
+    <form action="" method="POST" id="f_pricing_comment">
+      {% csrf_token %}
+    <label for="f_pricing_comment"> Komentarz do wyceny </label>
+    <div class="input-group">
+    <textarea class="form-control" rows="1" cols="50" form="f_pricing_comment" id="f_pricing_comment" name="f_pricing_comment">{% if pricing_comment != None %}{{pricing_comment}}{% endif %}</textarea>
+    <button type="submit" class="btn btn-secondary btn-lg btn-block btn-sm" >Dodaj/Edytuj komentarz</button>
+    </div>
+    </form>
+    </div>
+
+    </div>
+
+    </div>
+
+    </div>
+
+    </div>
+    </div>
+
+
+{% endblock %}
