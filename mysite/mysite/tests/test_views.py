@@ -2,13 +2,13 @@ from django.test import TestCase, Client
 from django.urls import reverse
 from mysite import views, models, urls
 import unittest
-#import pytest
+import pytest
 from selenium import webdriver
 from django.contrib.auth.models import User
 import json
 
 
-class TestLogin(unittest.TestCase):
+class test_login_with_testuser_data(unittest.TestCase):
 
     def setUp(self):
         chrome_options = webdriver.ChromeOptions()
